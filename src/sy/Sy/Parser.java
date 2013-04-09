@@ -100,7 +100,6 @@ public class Parser {
         while (tok.ttype!=LexAnn.TT_EOF) {
         	getNextToken();
         	SyExpr expr = parseLine();
-        	System.out.println("expr line: " + expr);
         	if(expr != SyExpr.FSNOP) {
         		root.addExpr(expr);
         	}
@@ -312,7 +311,6 @@ public class Parser {
     
     //Expression parser
     private SyExpr parseOp(SyExpr firstVar) throws ParseError{
-    	System.out.println("parsing op");
     	OpParser opParser = new OpParser();
     	
     	if(firstVar != null) {
@@ -535,7 +533,7 @@ public class Parser {
     private void getNextToken() throws ParseError  {
         
         tok.nextToken();
-    	System.out.println("next token: " + tok.ttype + "  " + tok.value);
+//    	System.out.println("next token: " + tok.ttype + "  " + tok.value);
     }
     
     private void resetTokens() throws ParseError  {

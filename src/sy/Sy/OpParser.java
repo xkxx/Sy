@@ -5,7 +5,9 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import sy.Sy.err.ParseError;
 import sy.Sy.expr.ExprBinaryOp;
+import sy.Sy.expr.ExprNegate;
 import sy.Sy.expr.SyExpr;
 
 public class OpParser {
@@ -96,10 +98,10 @@ public class OpParser {
 		}
 		return value;
 	}
-	public SyExpr parse() {
-		System.out.println("op dump: ");
-    	System.out.println(tokens);
-    	System.out.println(prios);
+	public SyExpr parse() throws ParseError {
+//		System.out.println("op dump: ");
+//    	System.out.println(tokens);
+//    	System.out.println(prios);
 		SyExpr finalExpr = SyExpr.FSNOP;
 		for(int i = prios.size()-1; i > 1; i--) {
 			Vector ops = (Vector) prios.elementAt(i);
@@ -108,11 +110,23 @@ public class OpParser {
 			int lastIndex;
 			for(int j = 0; j < ops.size(); j++) {
 				int opIndex = ((Integer) ops.elementAt(j)).intValue();
-				SyExpr op = (SyExpr) tokens.elementAt(opIndex);
+				ExprBinaryOp op = (ExprBinaryOp) tokens.elementAt(opIndex);
 				
-				((ExprBinaryOp) op).operands[0] = opLeftPop(opIndex);
-				((ExprBinaryOp) op).operands[1] = opRightPop(opIndex);
+				op.operands[0] = opLeftPop(opIndex);
+				op.operands[1] = opRightPop(opIndex);
 				
+				if(op.operands[0] == null) {
+					if (op.opType == LexAnn.TT_MINUS) {
+						ExprNegate negate = new ExprNegate(op.operands[1]);
+						tokens.setElementAt(negate, opIndex);
+						lastIndex = opIndex;
+						finalExpr = negate;
+						continue;
+					}
+					else {
+						throw new ParseError("Op " + op + " must have left argument");
+					}
+				}
 				lastIndex = opIndex;
 				finalExpr = op;
 			}

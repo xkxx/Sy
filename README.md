@@ -1,7 +1,7 @@
 Sy: Dynamic Scripting Language for Java ME
 ==
 
-Sy is a fork of murlen's fscriptME. The entire parser has been rewritten entirely, the interpreter removed, AST compiler added, syntax updated, and overall the code updated to be much more expanable and readable.
+Sy is a fork of murlen's fscriptME. The entire parser has been rewritten entirely, the interpreter removed, AST compiler added, syntax updated, and overall the code updated to be much more expandable and readable.
 
 ### Features
 
@@ -14,7 +14,7 @@ Sy is a fork of murlen's fscriptME. The entire parser has been rewritten entirel
 
 ### Implementation and Performance
 
-The interpreter included in the original fscriptME has been removed. Instead, a AST compiler has been added in its place. Now new code will have some minor compilation overhead, but frequently used functions will run much faster. Further optimation in the LexAnn might be desirable to achieve better performance. Help will be very appreciated in this aspect.
+The interpreter included in the original fscriptME has been removed. A AST compiler has been added in its place. Now new code will have some minor compilation overhead, but frequently used functions will run much faster. Further optimation in the LexAnn might be desirable to achieve better performance. Help will be very appreciated in this aspect.
 
 ### Future Roadmap
 
