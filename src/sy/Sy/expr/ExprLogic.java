@@ -1,14 +1,14 @@
 package sy.Sy.expr;
 
-import sy.Sy.FSContext;
+import sy.Sy.SyContext;
 import sy.Sy.LexAnn;
-import sy.Sy.err.FSException;
+import sy.Sy.err.SyException;
 import sy.Sy.err.RuntimeError;
-import sy.Sy.obj.FSObject;
+import sy.Sy.obj.SyObject;
 
 public class ExprLogic extends ExprBinaryOp {
 	
-	public ExprLogic(FSExpr[] operands, int op) throws FSException {
+	public ExprLogic(SyExpr[] operands, int op) throws SyException {
 		super(operands, op);
 	}
 	
@@ -16,14 +16,14 @@ public class ExprLogic extends ExprBinaryOp {
 		super(op);
 	}
 
-	public FSObject eval(FSContext context) throws FSException {
-		FSObject lVal = operands[0].eval(context), rVal = operands[1].eval(context);
+	public SyObject eval(SyContext context) throws SyException {
+		SyObject lVal = operands[0].eval(context), rVal = operands[1].eval(context);
 		
-		if (lVal.type == FSObject.T_INT && rVal.type == FSObject.T_INT){
+		if (lVal.type == SyObject.T_INT && rVal.type == SyObject.T_INT){
 			boolean lb = lVal.getInt()!=0, rb = rVal.getInt()!=0;
 			switch(opType) {
-            case LexAnn.TT_LAND: return (lb && rb) ? FSObject.FSTRUE : FSObject.FSFALSE;
-            case LexAnn.TT_LOR: return (lb || rb) ? FSObject.FSTRUE : FSObject.FSFALSE;
+            case LexAnn.TT_LAND: return (lb && rb) ? SyObject.FSTRUE : SyObject.FSFALSE;
+            case LexAnn.TT_LOR: return (lb || rb) ? SyObject.FSTRUE : SyObject.FSFALSE;
             default: throw new RuntimeError("Unrecognized  logical operator for int&int :" + opType);
 			}
 		}

@@ -1,15 +1,15 @@
 package sy.Sy.expr;
 
-import sy.Sy.FSContext;
-import sy.Sy.err.FSException;
+import sy.Sy.SyContext;
+import sy.Sy.err.SyException;
 import sy.Sy.err.RuntimeError;
-import sy.Sy.obj.FSObject;
+import sy.Sy.obj.SyObject;
 
-public abstract class ExprBinaryOp extends FSExpr {
+public abstract class ExprBinaryOp extends SyExpr {
 
-	public FSExpr operands[];
+	public SyExpr operands[];
 
-	public ExprBinaryOp(FSExpr[] operands, int op) throws FSException {
+	public ExprBinaryOp(SyExpr[] operands, int op) throws SyException {
 		this.operands = operands;
 		opType = op;
 		if(operands.length > 2) {
@@ -18,7 +18,7 @@ public abstract class ExprBinaryOp extends FSExpr {
 	}
 	
 	public ExprBinaryOp(int op) {
-		operands = new FSExpr[2];
+		operands = new SyExpr[2];
 		opType = op;
 	}
 }

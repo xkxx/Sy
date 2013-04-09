@@ -1,23 +1,23 @@
 package sy.Sy.expr;
 
-import sy.Sy.FSContext;
+import sy.Sy.SyContext;
 import sy.Sy.LexAnn;
-import sy.Sy.err.FSException;
+import sy.Sy.err.SyException;
 import sy.Sy.err.RetException;
 import sy.Sy.err.RuntimeError;
-import sy.Sy.obj.FSObject;
+import sy.Sy.obj.SyObject;
 
-public class ExprReturn extends FSExpr {
+public class ExprReturn extends SyExpr {
 
-	private FSExpr returnExpr;
+	private SyExpr returnExpr;
 	
-	public ExprReturn(FSExpr returnExpr) {
+	public ExprReturn(SyExpr returnExpr) {
 		opType = LexAnn.TT_RETURN;
 		this.returnExpr = returnExpr;
 	}
 	
-	public FSObject eval(FSContext context) throws FSException {
-		FSObject returnVal = FSObject.FSNULL;
+	public SyObject eval(SyContext context) throws SyException {
+		SyObject returnVal = SyObject.FSNULL;
 		try {
 			returnVal = returnExpr.eval(context);
 		}

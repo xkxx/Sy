@@ -2,23 +2,23 @@ package sy.Sy.expr;
 
 import java.util.Vector;
 
-import sy.Sy.FSContext;
+import sy.Sy.SyContext;
 import sy.Sy.LexAnn;
-import sy.Sy.err.FSException;
-import sy.Sy.obj.FSObject;
+import sy.Sy.err.SyException;
+import sy.Sy.obj.SyObject;
 
 
-public class ExprIf extends FSExpr {
+public class ExprIf extends SyExpr {
 
-	private FSExpr condition;
-	private FSExpr block;
+	private SyExpr condition;
+	private SyExpr block;
 	
 	public Vector elseifConditions;
 	public Vector elseifBlocks;
 	
-	public FSExpr elseBlock;
+	public SyExpr elseBlock;
 	
-	public ExprIf(FSExpr condition, FSExpr block) {
+	public ExprIf(SyExpr condition, SyExpr block) {
 		opType = LexAnn.TT_IF;
 		this.condition = condition;
 		this.block = block;
@@ -26,7 +26,7 @@ public class ExprIf extends FSExpr {
 		elseifBlocks = new Vector(5);
 	}
 	
-	public ExprIf(FSExpr condition, FSExpr block, FSExpr elseBlock) {
+	public ExprIf(SyExpr condition, SyExpr block, SyExpr elseBlock) {
 		opType = LexAnn.TT_IF;
 		this.condition = condition;
 		this.block = block;
@@ -35,21 +35,21 @@ public class ExprIf extends FSExpr {
 		elseifBlocks = new Vector(5);
 	}
 	
-	public FSObject eval(FSContext context) throws FSException {
-		if(condition.eval(context) == FSObject.FSTRUE) {
+	public SyObject eval(SyContext context) throws SyException {
+		if(condition.eval(context) == SyObject.FSTRUE) {
 			return this.block.eval(context);
 		}
 		if(elseifBlocks != null && elseifBlocks.size() > 0) {
 			for(int i = 0; i < elseifBlocks.size(); i++) {
-				if(((FSExpr)elseifConditions.elementAt(i)).eval(context) == FSObject.FSTRUE) {
-					return ((FSExpr)elseifBlocks.elementAt(i)).eval(context);
+				if(((SyExpr)elseifConditions.elementAt(i)).eval(context) == SyObject.FSTRUE) {
+					return ((SyExpr)elseifBlocks.elementAt(i)).eval(context);
 				}
 			}
 		}
 		if(elseBlock != null) {
 			return elseBlock.eval(context);
 		}
-		return FSObject.FSNULL;
+		return SyObject.FSNULL;
 	}
 	public String toString() {
 		StringBuffer result = new StringBuffer("(If: \n\t[condition \n\t");

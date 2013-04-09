@@ -9,7 +9,7 @@ import sy.Sy.err.ParseError;
 
 
 /**
- * <b>Re-Implementation of StreamTokenizer for FScript</b>
+ * <b>Re-Implementation of StreamTokenizer for Sy</b>
  * <p>
  * <I>Copyright (C) 2002 murlen.</I></p>
  * <p>

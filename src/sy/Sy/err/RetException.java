@@ -1,10 +1,10 @@
 package sy.Sy.err;
 
-import sy.Sy.obj.FSObject;
+import sy.Sy.obj.SyObject;
 
-public class RetException extends FSException {
-	public FSObject retValue;
-	public RetException(FSObject retValue) {
+public class RetException extends SyException {
+	public SyObject retValue;
+	public RetException(SyObject retValue) {
 		this.retValue = retValue;
 	}
 }

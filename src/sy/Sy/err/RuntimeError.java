@@ -1,6 +1,6 @@
 package sy.Sy.err;
 
-public class RuntimeError extends FSException {
+public class RuntimeError extends SyException {
     public RuntimeError(String msg) {
 		super(msg);
 	}

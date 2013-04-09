@@ -1,14 +1,14 @@
 package sy.Sy.expr;
 
-import sy.Sy.FSContext;
+import sy.Sy.SyContext;
 import sy.Sy.obj.*;
 
-public class ExprVal extends FSExpr {
+public class ExprVal extends SyExpr {
 
-	protected FSObject val;
+	protected SyObject val;
 	protected String valKey;
 	
-	public ExprVal(FSObject val) {
+	public ExprVal(SyObject val) {
 		this.val = val;
 	}
 	public ExprVal(String key) {
@@ -25,7 +25,7 @@ public class ExprVal extends FSExpr {
 	}
 
 	// get constant value
-	public FSObject getVal() {
+	public SyObject getVal() {
 		return val;
 	}
 	
@@ -34,14 +34,14 @@ public class ExprVal extends FSExpr {
 		return valKey;
 	}
 	
-	public FSObject eval(FSContext context) {
+	public SyObject eval(SyContext context) {
 		if(val != null) {
 			return val;
 		}
 		else if (valKey != null) {
 			return context.getVar(valKey);
 		}
-		return FSObject.FSNULL; // shouldn't get here
+		return SyObject.FSNULL; // shouldn't get here
 	}
 
 }

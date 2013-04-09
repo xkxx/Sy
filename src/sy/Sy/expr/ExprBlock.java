@@ -3,12 +3,12 @@ package sy.Sy.expr;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import sy.Sy.FSContext;
-import sy.Sy.err.FSException;
-import sy.Sy.obj.FSObject;
+import sy.Sy.SyContext;
+import sy.Sy.err.SyException;
+import sy.Sy.obj.SyObject;
 
 
-public class ExprBlock extends FSExpr {
+public class ExprBlock extends SyExpr {
 
 	private Vector exprSequence;
 	
@@ -16,14 +16,14 @@ public class ExprBlock extends FSExpr {
 		exprSequence = new Vector(10);
 	}
 	
-	public void addExpr(FSExpr expr) {
+	public void addExpr(SyExpr expr) {
 		exprSequence.addElement(expr);
 		}
 	
-	public FSObject eval(FSContext context) throws FSException {
-		FSObject exprValue = FSObject.FSNULL;
+	public SyObject eval(SyContext context) throws SyException {
+		SyObject exprValue = SyObject.FSNULL;
 		for (Enumeration expr = exprSequence.elements(); expr.hasMoreElements();) {
-			exprValue = ((FSExpr)expr.nextElement()).eval(context);
+			exprValue = ((SyExpr)expr.nextElement()).eval(context);
 		}
 		return exprValue;
 	}
@@ -31,7 +31,7 @@ public class ExprBlock extends FSExpr {
 		StringBuffer result = new StringBuffer("(Block:");
 		for (Enumeration expr = exprSequence.elements(); expr.hasMoreElements();) {
 			result.append("\n\t");
-			result.append(((FSExpr)expr.nextElement()));
+			result.append(((SyExpr)expr.nextElement()));
 	     }
 		result.append("\n)");
 		return result.toString();

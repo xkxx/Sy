@@ -7,12 +7,12 @@ import java.util.Stack;
 import java.util.Vector;
 import java.lang.*;
 
-import sy.Sy.err.FSException;
+import sy.Sy.err.SyException;
 import sy.Sy.err.ParseError;
 import sy.Sy.err.RetException;
 import sy.Sy.expr.*;
-import sy.Sy.obj.FSFunction;
-import sy.Sy.obj.FSObject;
+import sy.Sy.obj.SyFunction;
+import sy.Sy.obj.SyObject;
 
 
 /**
@@ -66,17 +66,17 @@ public class Parser {
     private LineLoader code; //the code
     private LexAnn tok; //tokenizer
     
-    private FSObject retVal;
-    private FSContext global;
-    private FScript host; //link to hosting FScript object
+    private SyObject retVal;
+    private SyContext global;
+    private Sy host; //link to hosting Sy object
     private ExprBlock root;
     
     private String error[];
     /** Public constructor
-     * @param h a reference to the FScript object
+     * @param h a reference to the Sy object
      */
-    Parser(FScript h) {
-    	global = new FSContext(h);
+    Parser(Sy h) {
+    	global = new SyContext(h);
         root = new ExprBlock();
         tok=new LexAnn();
         host = h;
@@ -99,9 +99,9 @@ public class Parser {
         
         while (tok.ttype!=LexAnn.TT_EOF) {
         	getNextToken();
-        	FSExpr expr = parseLine();
+        	SyExpr expr = parseLine();
         	System.out.println("expr line: " + expr);
-        	if(expr != FSExpr.FSNOP) {
+        	if(expr != SyExpr.FSNOP) {
         		root.addExpr(expr);
         	}
             
@@ -118,7 +118,7 @@ public class Parser {
         parse();
     }
     
-    FSObject run() throws FSException{
+    SyObject run() throws SyException{
     	return retVal =  root.eval(global);
     }
     
@@ -141,7 +141,7 @@ public class Parser {
      * 
      * TODO: make everything expressions
     */
-    private FSExpr parseLine() throws ParseError {
+    private SyExpr parseLine() throws ParseError {
         switch(tok.ttype) {
         //control struct and func def
             case LexAnn.TT_IF: {
@@ -184,7 +184,7 @@ public class Parser {
             case LexAnn.TT_INTEGER:
             case LexAnn.TT_DOUBLE:
             case LexAnn.TT_STRING: {
-            	ExprVal firstVal = new ExprVal(new FSObject(tok.value, tok.ttype));
+            	ExprVal firstVal = new ExprVal(new SyObject(tok.value, tok.ttype));
             	getNextToken();
             	if(tok.ttype >= LexAnn.TT_PLUS && tok.ttype <= LexAnn.TT_NOT) {
             		return parseOp(firstVal);
@@ -201,10 +201,10 @@ public class Parser {
             	return parseOp(null);
             }
             case LexAnn.TT_EOL: {
-                return FSExpr.FSNOP;
+                return SyExpr.FSNOP;
             }
             case LexAnn.TT_EOF:{
-            	return FSExpr.FSNOP;
+            	return SyExpr.FSNOP;
             }
             default: {
                 throw new ParseError("Expected identifier");
@@ -216,12 +216,12 @@ public class Parser {
     /* NOTE: if var doesn't exist, it will be added.
      * 
      * */
-    private FSExpr parseAssign(String firstVal) throws ParseError {
+    private SyExpr parseAssign(String firstVal) throws ParseError {
         getNextToken();
         return new ExprAssign(firstVal, parseLine());
     }
     
-    private FSExpr parseFunc(boolean isFuncDef) throws ParseError {
+    private SyExpr parseFunc(boolean isFuncDef) throws ParseError {
     	if(isFuncDef == true) {
     		getNextToken(); // skip 'func'
     	}
@@ -272,12 +272,12 @@ public class Parser {
     }
 
 	//handles function definitions
-    private FSExpr parseFuncDef(String funcName, Vector funcParams) throws ParseError {
+    private SyExpr parseFuncDef(String funcName, Vector funcParams) throws ParseError {
         
     	boolean multiline = (tok.ttype == LexAnn.TT_EQ)? false : true;
     	getNextToken();
         
-    	FSExpr body;
+    	SyExpr body;
     	
     	if(multiline) {
     		body = new ExprBlock();
@@ -304,14 +304,14 @@ public class Parser {
     		}
     		funcParams.setElementAt(paramName, i);
     	}
-    	FSFunction func = new FSFunction(body, funcParams, global);
+    	SyFunction func = new SyFunction(body, funcParams, global);
     	global.setVar(funcName, func);
     	
         return new ExprVal(func);
     }
     
     //Expression parser
-    private FSExpr parseOp(FSExpr firstVar) throws ParseError{
+    private SyExpr parseOp(SyExpr firstVar) throws ParseError{
     	System.out.println("parsing op");
     	OpParser opParser = new OpParser();
     	
@@ -322,7 +322,7 @@ public class Parser {
         boolean inParen = false;
     	while(exit != true) {
     		if(tok.ttype >= LexAnn.TT_INTEGER && tok.ttype <= LexAnn.TT_NULL) {
-    			opParser.add(new ExprVal(new FSObject (tok.value, tok.ttype)));
+    			opParser.add(new ExprVal(new SyObject (tok.value, tok.ttype)));
     		}
     		else if(tok.ttype == LexAnn.TT_WORD) {
     			opParser.add(new ExprVal((String)tok.value));
@@ -365,7 +365,7 @@ public class Parser {
     
     private ExprIf parseIf() throws ParseError {
     	getNextToken();
-    	FSExpr condition = parseLine();
+    	SyExpr condition = parseLine();
     	// FIXME: we assume that after condition ttype=:or\n
     	boolean multiline = (tok.ttype == LexAnn.TT_THEN)? false : true;
     	getNextToken();
@@ -427,10 +427,10 @@ public class Parser {
     	return ret;
     }
     
-    private FSExpr parseWhile() throws ParseError {
+    private SyExpr parseWhile() throws ParseError {
         //parses the while statement
     	getNextToken();
-        FSExpr condition = parseLine();
+        SyExpr condition = parseLine();
     	boolean multiline = (tok.ttype == LexAnn.TT_THEN)? false : true;
     	getNextToken();
     	if(multiline) {
@@ -477,10 +477,10 @@ public class Parser {
         return block;
     }
 //    
-//    //format an error message and throw FSException
-//    private void parseError(String s) throws FSException {
+//    //format an error message and throw SyException
+//    private void parseError(String s) throws SyException {
 //        if(tok == null) {
-//        	throw new FSException(s);
+//        	throw new SyException(s);
 //        }
 //        // set up our error block
 //        error=new String[6];
@@ -494,19 +494,19 @@ public class Parser {
 //        // build the display string
 //        s="\n\t"+s+"\n"+getContext();
 //
-//        throw new FSException(s);
+//        throw new SyException(s);
 //    }
     
     /**
      * get the current context
-     * @return FSContext global context
+     * @return SyContext global context
      */
     
-    public FSContext getContext() {
+    public SyContext getContext() {
     	return global;
     }
     
-    public FSExpr getAST() {
+    public SyExpr getAST() {
     	return root;
     }
     
@@ -545,12 +545,12 @@ public class Parser {
     
     
     //Gets the 'return' value from the parser
-    FSObject getReturnValue(){
+    SyObject getReturnValue(){
 	    return retVal;
     }
     
     //Can be called from external functions to force an exit
-    void exit(FSObject o) throws FSException{
+    void exit(SyObject o) throws SyException{
 	    retVal=o;
 	    throw new RetException(o);
     }

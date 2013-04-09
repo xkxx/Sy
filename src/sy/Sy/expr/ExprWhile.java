@@ -1,34 +1,34 @@
 package sy.Sy.expr;
 
-import sy.Sy.FSContext;
+import sy.Sy.SyContext;
 import sy.Sy.LexAnn;
-import sy.Sy.err.FSException;
-import sy.Sy.obj.FSObject;
+import sy.Sy.err.SyException;
+import sy.Sy.obj.SyObject;
 
-public class ExprWhile extends FSExpr {
+public class ExprWhile extends SyExpr {
 
-	private FSExpr exitCondition;
-	private FSExpr loopBlock;
+	private SyExpr exitCondition;
+	private SyExpr loopBlock;
 	
-	public ExprWhile(FSExpr exitCondition, FSExpr loopBlock) {
+	public ExprWhile(SyExpr exitCondition, SyExpr loopBlock) {
 		opType = LexAnn.TT_WHILE;
 		this.exitCondition = exitCondition;
 		this.loopBlock = loopBlock;
 	}
 	
-	public FSObject eval(FSContext context) throws FSException {
+	public SyObject eval(SyContext context) throws SyException {
 		try {
-		FSObject condition = exitCondition.eval(context);
-		FSObject returnVal = FSObject.FSNULL;
+		SyObject condition = exitCondition.eval(context);
+		SyObject returnVal = SyObject.FSNULL;
 		
-		while (condition == FSObject.FSTRUE) {
+		while (condition == SyObject.FSTRUE) {
 			returnVal = loopBlock.eval(context);
 			condition = exitCondition.eval(context);
 		}
 		return returnVal;
 		
 		}
-		catch(FSException err) {
+		catch(SyException err) {
 			throw err;
 		}
 	}

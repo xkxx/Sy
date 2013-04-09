@@ -3,7 +3,7 @@ package sy.Sy;
 import java.util.Vector;
 
 /**
-* <b>LineLoader - used by FScript to load source text</b>
+* <b>LineLoader - used by Sy to load source text</b>
   <p>
   <I>Copyright (C) 2002 murlen.</I></p>
     <p>

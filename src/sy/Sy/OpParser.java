@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import sy.Sy.expr.ExprBinaryOp;
-import sy.Sy.expr.FSExpr;
+import sy.Sy.expr.SyExpr;
 
 public class OpParser {
 
@@ -50,11 +50,11 @@ public class OpParser {
 		return ((Integer)opPrio.get(new Integer(op))).intValue();
 	}
 	
-	public void add(FSExpr value) {
+	public void add(SyExpr value) {
 		tokens.addElement(value);
 	}
 	
-	public void add(FSExpr op, boolean inParen) {
+	public void add(SyExpr op, boolean inParen) {
 		int prio = getPrio(op.opType) + (inParen ? parenWeight : 0);
 		tokens.addElement(op);
 		
@@ -73,10 +73,10 @@ public class OpParser {
 	
 	// TODO: preliminary: parallelism not maximized
 	
-	private FSExpr opLeftPop(int start) {
-		FSExpr value = null;
+	private SyExpr opLeftPop(int start) {
+		SyExpr value = null;
 		for(int i = start-1; i >=0; i--) {
-			value = (FSExpr) tokens.elementAt(i);
+			value = (SyExpr) tokens.elementAt(i);
 			if(value != null) {
 				tokens.setElementAt(null, i);
 				return value;
@@ -85,10 +85,10 @@ public class OpParser {
 		return value;
 	}
 	
-	private FSExpr opRightPop(int start) {
-		FSExpr value = null;
+	private SyExpr opRightPop(int start) {
+		SyExpr value = null;
 		for(int i = start+1; i < tokens.size(); i++) {
-			value = (FSExpr) tokens.elementAt(i);
+			value = (SyExpr) tokens.elementAt(i);
 			if(value != null) {
 				tokens.setElementAt(null, i);
 				return value;
@@ -96,11 +96,11 @@ public class OpParser {
 		}
 		return value;
 	}
-	public FSExpr parse() {
+	public SyExpr parse() {
 		System.out.println("op dump: ");
     	System.out.println(tokens);
     	System.out.println(prios);
-		FSExpr finalExpr = FSExpr.FSNOP;
+		SyExpr finalExpr = SyExpr.FSNOP;
 		for(int i = prios.size()-1; i > 1; i--) {
 			Vector ops = (Vector) prios.elementAt(i);
 			if(ops == null) continue;
@@ -108,7 +108,7 @@ public class OpParser {
 			int lastIndex;
 			for(int j = 0; j < ops.size(); j++) {
 				int opIndex = ((Integer) ops.elementAt(j)).intValue();
-				FSExpr op = (FSExpr) tokens.elementAt(opIndex);
+				SyExpr op = (SyExpr) tokens.elementAt(opIndex);
 				
 				((ExprBinaryOp) op).operands[0] = opLeftPop(opIndex);
 				((ExprBinaryOp) op).operands[1] = opRightPop(opIndex);
