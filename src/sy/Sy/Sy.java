@@ -2,8 +2,10 @@ package sy.Sy;
 
 import java.util.Vector;
 
+import sy.Sy.err.RetException;
 import sy.Sy.err.SyException;
 import sy.Sy.err.ParseError;
+import sy.Sy.expr.ExprBlock;
 import sy.Sy.expr.ExprFuncCall;
 import sy.Sy.expr.ExprVal;
 import sy.Sy.expr.SyExpr;
@@ -11,7 +13,7 @@ import sy.Sy.obj.SyObject;
 
 
 /**
- * <b>Femto Script - an incredibly simplistic scripting language</b>
+ * <b>Sy - dynamic compiled language</b>
    <p>
   <I>Copyright (C) 2002 murlen.</I></p>
     <p>
@@ -37,33 +39,38 @@ public class Sy {
     
     
     private Parser parser;
-    private LineLoader code;
+    private ExprBlock bin;
     private SyContext global;
     
     /** Constructor 
      * @throws ParseError */
     public Sy() {
-        
-        parser=new Parser(this);
-        code=new LineLoader();
-        parser.setCode(code);
-        global = parser.getContext();
+        global = new SyContext(this);
+        parser = new Parser(this, global);
+        bin = parser.root;
+    }
+    
+    public Sy(SyContext global) {
+        this.global = global;
+        parser = new Parser(this, global);
+        bin = parser.root;
     }
     
     public void addLines(String s){
-        code.addLines(s);
+        parser.code.addLines(s);
     }
     
     public void parse() {
-    	parser.parse();
+        parser.parse();
     }
     
     /**
      * parse the inputed line; only used in debug
      * for interactive evaluation, use evaluateExprssion
      */
-    public void parse(String line) {
-    	parser.parse(line);
+    public ExprBlock parse(String line) {
+        clear();
+        return parser.parse(line);
     }
     
     /**
@@ -72,7 +79,7 @@ public class Sy {
      *Sy's supported type objects, Integer,String)
      */
     public SyObject run() {
-		return parser.run();
+		return bin.eval(global);
     }
 
     /**
@@ -82,28 +89,35 @@ public class Sy {
      * @throws SyException 
      */ 
     public SyObject evaluateExpression(String expr) {
-        parser.parse(expr);
-        return parser.run();
+        ExprBlock bin = parser.parse(expr);
+        return bin.eval(global);
     }
     
     /**
      * Resets the internal code store
      */
     public void reset(){
-        code.reset();
-        parser.reset();
+        global.clear();
+        
     }
     
     /**
      * Resets the internal code store
      */
     public void clear(){
-        code.reset();
+        parser.reset();
+        parser.clear();
+        bin = parser.root;
     }
     
     public String debug() {
-    	return parser.getAST().toString();
+        return bin.toString();
     }
+    
+    public SyContext getContext() {
+    	return global;
+    }
+    
     /**
     * Forces an exit from the currently running script 
     * equivalent of 'exit' keyword in FScriptME itself.
@@ -112,7 +126,8 @@ public class Sy {
     *@param o, object that will be returned from the entry point (runCode or cont)
     **/
     public void exit(SyObject o) {
-	    parser.exit(o);
+        //Can be called from external functions to force an exit
+        throw new RetException(o);
     }
     
     /** TODO
@@ -131,20 +146,6 @@ public class Sy {
 //        }
 //    }
     
-    /**
-     * Returns more details on any error states, indicated by
-     * FSExceptions.
-     * @return String, see below <br>
-     * s[0]=the error text <BR>
-     * s[1]=the line number <BR>
-     * s[2]=the line text <BR>
-     * s[3]=the current token <BR>
-     * s[4]=a variable dump (current scope) <BR>
-     * s[5]=a global variable dump (only if currnent scope is not global <BR>
-     */
-    public String[] getError() {
-        return parser.getError();
-    }
     
     /**
      * Override this method to allow external access to variables

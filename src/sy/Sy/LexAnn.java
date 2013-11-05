@@ -215,7 +215,7 @@ public final class LexAnn {
     		pBack = false;
             return ttype;
     	}
-    	if(ttype == 0 || ttype == TT_EOL) {
+    	if(ttype == TT_EOL) {
     		if((lineLoader != null) && (lineLoader.getCurLine() < lineLoader.lineCount())) {
     			setString(lineLoader.nextLine());
     		}

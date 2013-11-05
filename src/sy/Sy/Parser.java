@@ -7,7 +7,6 @@ import java.util.Stack;
 import java.util.Vector;
 import java.lang.*;
 
-import sy.Sy.err.SyException;
 import sy.Sy.err.ParseError;
 import sy.Sy.err.RetException;
 import sy.Sy.expr.*;
@@ -63,41 +62,28 @@ import sy.Sy.obj.SyObject;
  */
 public class Parser {
     
-    private LineLoader code; //the code
+	/*package private*/ LineLoader code; //the code
     private LexAnn tok; //tokenizer
     
-    private SyObject retVal;
     private SyContext global;
-    private Sy host; //link to hosting Sy object
-    private ExprBlock root;
+    /*package private*/ ExprBlock root;
     
-    private String error[];
     /** Public constructor
      * @param h a reference to the Sy object
      */
-    Parser(Sy h) {
-    	global = new SyContext(h);
+    Parser(Sy host, SyContext global) {
+        this.global = global;
         root = new ExprBlock();
-        tok=new LexAnn();
-        host = h;
-    }
-    
-    /**
-     * Sets the LineLoader class to be used for input
-     * @param in - the class
-     * @throws ParseError 
-     */
-    void setCode(LineLoader in) {
-        code=in;
-        tok.setLineLoader(in);
+        code = new LineLoader();
+        tok = new LexAnn(code);
     }
     
     /**
      *Incrementally parsing lines
      */
-    void parse() {
+    public ExprBlock parse() {
         
-        while (tok.ttype!=LexAnn.TT_EOF) {
+        while (tok.ttype != LexAnn.TT_EOF) {
         	getNextToken();
         	SyExpr expr = parseLine();
         	if(expr != SyExpr.FSNOP) {
@@ -105,35 +91,30 @@ public class Parser {
         	}
             
         }
-        
+        return root;
     }
     
     /**
      * Incrementally parsing lines
      * @param line - the line to be parsed
      */
-    void parse(String line) {
+    public ExprBlock parse(String line) {
         tok.setString(line);
-        parse();
-    }
-    
-    SyObject run() {
-    	return retVal =  root.eval(global);
+        return parse();
     }
     
     /**
-     * Resets the runtime state.
+     * Resets the parser state.
      */
     void reset() {
-    	global.clear();
+    	code.reset();
     }
     
     /**
      * Resets the parser state.
      */
     void clear() {
-    	global.clear();
-    	root = null;
+        root = new ExprBlock();
     }
     
     /*statement - top level thing
@@ -495,19 +476,6 @@ public class Parser {
 //        throw new SyException(s);
 //    }
     
-    /**
-     * get the current context
-     * @return SyContext global context
-     */
-    
-    public SyContext getContext() {
-    	return global;
-    }
-    
-    public SyExpr getAST() {
-    	return root;
-    }
-    
 //    public String getContext() {
 //        int l=code.getCurLine();
 //        String s="\t\t at line:" + l + " ";
@@ -524,11 +492,6 @@ public class Parser {
 //        return s;
 //    }
     
-    //return the error block
-    public String[] getError() {
-        return error;
-    }
-    
     // Convenient method
     private void getNextToken()  {
         
@@ -539,17 +502,5 @@ public class Parser {
     private void resetTokens()  {
         tok.setString(code.getLine());
         tok.nextToken();
-    }
-    
-    
-    //Gets the 'return' value from the parser
-    SyObject getReturnValue(){
-	    return retVal;
-    }
-    
-    //Can be called from external functions to force an exit
-    void exit(SyObject o) {
-	    retVal=o;
-	    throw new RetException(o);
     }
 }

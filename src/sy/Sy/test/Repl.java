@@ -1,9 +1,7 @@
 package sy.Sy.test;
 
 import sy.Sy.Sy;
-import sy.Sy.err.SyException;
-import sy.Sy.err.ParseError;
-import sy.Sy.err.RuntimeError;
+import sy.Sy.expr.ExprBlock;
 import sy.Sy.obj.SyObject;
 import java.util.Scanner;
 
@@ -15,11 +13,10 @@ public class Repl {
 		System.out.println(msg);
 	}
 	private static SyObject test(String expression, Sy scriptObject) {
-		scriptObject.addLines(expression);
-		scriptObject.parse();
+		ExprBlock bin = scriptObject.parse(expression);
 		println("AST dump:");
-		print(scriptObject.debug());
-		SyObject result = scriptObject.run();
+		println(bin.toString());
+		SyObject result = bin.eval(scriptObject.getContext());
 		println("Result:");
 		println(result.toString());
 		return result;
