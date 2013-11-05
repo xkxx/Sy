@@ -8,7 +8,7 @@ import sy.Sy.obj.SyObject;
 
 public class ExprLogic extends ExprBinaryOp {
 	
-	public ExprLogic(SyExpr[] operands, int op) throws SyException {
+	public ExprLogic(SyExpr[] operands, int op) {
 		super(operands, op);
 	}
 	
@@ -16,7 +16,7 @@ public class ExprLogic extends ExprBinaryOp {
 		super(op);
 	}
 
-	public SyObject eval(SyContext context) throws SyException {
+	public SyObject eval(SyContext context) {
 		SyObject lVal = operands[0].eval(context), rVal = operands[1].eval(context);
 		
 		if (lVal.type == SyObject.T_INT && rVal.type == SyObject.T_INT){

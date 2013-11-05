@@ -42,7 +42,7 @@ public class Sy {
     
     /** Constructor 
      * @throws ParseError */
-    public Sy() throws ParseError {
+    public Sy() {
         
         parser=new Parser(this);
         code=new LineLoader();
@@ -54,7 +54,7 @@ public class Sy {
         code.addLines(s);
     }
     
-    public void parse() throws ParseError {
+    public void parse() {
     	parser.parse();
     }
     
@@ -62,7 +62,7 @@ public class Sy {
      * parse the inputed line; only used in debug
      * for interactive evaluation, use evaluateExprssion
      */
-    public void parse(String line) throws ParseError {
+    public void parse(String line) {
     	parser.parse(line);
     }
     
@@ -71,8 +71,7 @@ public class Sy {
      *@return any return value of the script's execution (will be one of 
      *Sy's supported type objects, Integer,String)
      */
-    public SyObject run() throws SyException {
-        //reset the internal variable state
+    public SyObject run() {
 		return parser.run();
     }
 
@@ -82,7 +81,7 @@ public class Sy {
      *Sy's supported type objects, Integer,String)
      * @throws SyException 
      */ 
-    public SyObject evaluateExpression(String expr) throws SyException {
+    public SyObject evaluateExpression(String expr) {
         parser.parse(expr);
         return parser.run();
     }
@@ -95,6 +94,12 @@ public class Sy {
         parser.reset();
     }
     
+    /**
+     * Resets the internal code store
+     */
+    public void clear(){
+        code.reset();
+    }
     
     public String debug() {
     	return parser.getAST().toString();
@@ -106,7 +111,7 @@ public class Sy {
     * subclasses
     *@param o, object that will be returned from the entry point (runCode or cont)
     **/
-    public void exit(SyObject o) throws SyException{
+    public void exit(SyObject o) {
 	    parser.exit(o);
     }
     
@@ -117,7 +122,7 @@ public class Sy {
      *@return any return value of the script's execution (will be one of 
      *Sy's supported type objects, Integer,String)
      */
-//    public Object cont() throws SyException {
+//    public Object cont() {
 //        if (code.getCurLine()==0){
 //            return run();
 //        }
@@ -202,7 +207,7 @@ public class Sy {
      * @param params an ArrayList of parameter values
      * @return an Object, currently expected to be Integer or String
      */
-    protected Object callFunction(String name, Vector params) throws SyException {
+    protected Object callFunction(String name, Vector params) {
         throw new SyException("Unrecognized External: " + name);
     }
     
@@ -213,7 +218,7 @@ public class Sy {
      *should be used with caution from within an overriden setVar.
      *@param name the name of the variable
      *@param value the value to set variable to (String,Integer)*/
-    public final void setScriptVar(String name, SyObject value) throws SyException{
+    public final void setScriptVar(String name, SyObject value) {
         global.setVar(name,value);
     }
     
@@ -223,7 +228,7 @@ public class Sy {
      *should be used with caution from within an overriden getVar.
      *@param name the name of the variable
      *@return the value of the variable (String,Integer)*/
-    public final SyObject getScriptVar(String name) throws SyException{
+    public final SyObject getScriptVar(String name) {
         return global.getVar(name);
     }
     
@@ -234,7 +239,7 @@ public class Sy {
      *@param params the parameters to pass (must be correct type and number)
      *@return the return value of the function (String,Integer)*/
     
-    public final Object callScriptFunction(String name,Vector params) throws SyException {
+    public final Object callScriptFunction(String name,Vector params) {
     	return new ExprFuncCall(new ExprVal(name), params).eval(global);
     }
     

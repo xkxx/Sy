@@ -14,11 +14,11 @@ public class ExprStdCalculation extends ExprBinaryOp {
 		super(op);
 	}
 	
-	public ExprStdCalculation(SyExpr[] operands, int op) throws SyException {
+	public ExprStdCalculation(SyExpr[] operands, int op) {
 		super(operands, op);
 	}
 	
-	public SyObject eval(SyContext context) throws SyException{
+	public SyObject eval(SyContext context) {
 		SyObject lVal = operands[0].eval(context), rVal = operands[1].eval(context);
 
 		if (lVal.type == SyObject.T_INT && rVal.type == SyObject.T_INT){

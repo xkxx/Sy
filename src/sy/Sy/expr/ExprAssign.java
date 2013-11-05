@@ -34,7 +34,7 @@ public class ExprAssign extends SyExpr {
 		this.isGlobal = isGlobal;
 	}
 	
-	public SyObject eval(SyContext context) throws SyException {
+	public SyObject eval(SyContext context) {
 		SyObject rhandVal = rhand.eval(context);
 		if(isGlobal) {
 			context.setGlobalVar(lvar, rhandVal);

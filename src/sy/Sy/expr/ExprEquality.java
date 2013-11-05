@@ -7,7 +7,7 @@ import sy.Sy.obj.SyObject;
 
 public class ExprEquality extends ExprBinaryOp {
 
-	public ExprEquality(SyExpr[] operands, int op) throws SyException {
+	public ExprEquality(SyExpr[] operands, int op) {
 		super(operands, op);
 	}
 	
@@ -15,7 +15,7 @@ public class ExprEquality extends ExprBinaryOp {
 		super(op);
 	}
 
-	public SyObject eval(SyContext context) throws SyException {
+	public SyObject eval(SyContext context) {
 		SyObject lVal = operands[0].eval(context), rVal = operands[1].eval(context);
 		boolean result = lVal.equals(rVal);
 		

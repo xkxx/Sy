@@ -9,7 +9,7 @@ public abstract class ExprBinaryOp extends SyExpr {
 
 	public SyExpr operands[];
 
-	public ExprBinaryOp(SyExpr[] operands, int op) throws SyException {
+	public ExprBinaryOp(SyExpr[] operands, int op) {
 		this.operands = operands;
 		opType = op;
 		if(operands.length > 2) {

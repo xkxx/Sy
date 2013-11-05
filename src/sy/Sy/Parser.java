@@ -87,7 +87,7 @@ public class Parser {
      * @param in - the class
      * @throws ParseError 
      */
-    void setCode(LineLoader in) throws ParseError {
+    void setCode(LineLoader in) {
         code=in;
         tok.setLineLoader(in);
     }
@@ -95,7 +95,7 @@ public class Parser {
     /**
      *Incrementally parsing lines
      */
-    void parse() throws ParseError {
+    void parse() {
         
         while (tok.ttype!=LexAnn.TT_EOF) {
         	getNextToken();
@@ -112,12 +112,12 @@ public class Parser {
      * Incrementally parsing lines
      * @param line - the line to be parsed
      */
-    void parse(String line) throws ParseError {
+    void parse(String line) {
         tok.setString(line);
         parse();
     }
     
-    SyObject run() throws SyException{
+    SyObject run() {
     	return retVal =  root.eval(global);
     }
     
@@ -140,7 +140,7 @@ public class Parser {
      * 
      * TODO: make everything expressions
     */
-    private SyExpr parseLine() throws ParseError {
+    private SyExpr parseLine() {
         switch(tok.ttype) {
         //control struct and func def
             case LexAnn.TT_IF: {
@@ -215,12 +215,12 @@ public class Parser {
     /* NOTE: if var doesn't exist, it will be added.
      * 
      * */
-    private SyExpr parseAssign(String firstVal) throws ParseError {
+    private SyExpr parseAssign(String firstVal) {
         getNextToken();
         return new ExprAssign(firstVal, parseLine());
     }
     
-    private SyExpr parseFunc(boolean isFuncDef) throws ParseError {
+    private SyExpr parseFunc(boolean isFuncDef) {
     	if(isFuncDef == true) {
     		getNextToken(); // skip 'func'
     	}
@@ -271,7 +271,7 @@ public class Parser {
     }
 
 	//handles function definitions
-    private SyExpr parseFuncDef(String funcName, Vector funcParams) throws ParseError {
+    private SyExpr parseFuncDef(String funcName, Vector funcParams) {
         
     	boolean multiline = (tok.ttype == LexAnn.TT_EQ)? false : true;
     	getNextToken();
@@ -310,7 +310,7 @@ public class Parser {
     }
     
     //Expression parser
-    private SyExpr parseOp(SyExpr firstVar) throws ParseError{
+    private SyExpr parseOp(SyExpr firstVar) {
     	OpParser opParser = new OpParser();
     	
     	if(firstVar != null) {
@@ -361,7 +361,7 @@ public class Parser {
     	return opParser.parse();
     }
     
-    private ExprIf parseIf() throws ParseError {
+    private ExprIf parseIf() {
     	getNextToken();
     	SyExpr condition = parseLine();
     	// FIXME: we assume that after condition ttype=:or\n
@@ -425,7 +425,7 @@ public class Parser {
     	return ret;
     }
     
-    private SyExpr parseWhile() throws ParseError {
+    private SyExpr parseWhile() {
         //parses the while statement
     	getNextToken();
         SyExpr condition = parseLine();
@@ -450,7 +450,7 @@ public class Parser {
     //parse global variable definitions
     // FIXME: add documentation on that setting local variable will change its outer scope.
     // While global keyword is for adding new global variables.
-    private ExprBlock parseGlobalVarDef() throws ParseError {
+    private ExprBlock parseGlobalVarDef() {
         String name;
         ExprBlock block = new ExprBlock();
         do {
@@ -530,13 +530,13 @@ public class Parser {
     }
     
     // Convenient method
-    private void getNextToken() throws ParseError  {
+    private void getNextToken()  {
         
         tok.nextToken();
 //    	System.out.println("next token: " + tok.ttype + "  " + tok.value);
     }
     
-    private void resetTokens() throws ParseError  {
+    private void resetTokens()  {
         tok.setString(code.getLine());
         tok.nextToken();
     }
@@ -548,7 +548,7 @@ public class Parser {
     }
     
     //Can be called from external functions to force an exit
-    void exit(SyObject o) throws SyException{
+    void exit(SyObject o) {
 	    retVal=o;
 	    throw new RetException(o);
     }

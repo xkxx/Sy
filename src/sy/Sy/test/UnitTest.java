@@ -129,11 +129,11 @@ public class UnitTest {
     
     // Code executed after each test   
     @After
-    public void tearDown() throws Exception {
+    public void tearDown(){
     }
  
     @AfterClass
-    public static void tearDownClass() throws Exception {
+    public static void tearDownClass() {
         // Code executed after the last test method 
     }
 }

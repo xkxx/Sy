@@ -28,7 +28,7 @@ import java.lang.*;
 * @version 0.5
 */
 
-public class SyException extends Exception {
+public class SyException extends RuntimeException {
     
     protected String msg;
     

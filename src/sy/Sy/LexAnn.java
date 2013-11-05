@@ -150,14 +150,14 @@ public final class LexAnn {
 
     /**Convenience constructor which sets line as well
      * @throws ParseError */
-    public LexAnn(String firstLine) throws ParseError {
+    public LexAnn(String firstLine) {
         this();
         setString(firstLine);
     }
     
     /**Convenience constructor that takes code from CodeLoader
      * @throws ParseError */
-    public LexAnn(LineLoader lineLoader) throws ParseError {
+    public LexAnn(LineLoader lineLoader) {
         this();
         setLineLoader(lineLoader);
     }
@@ -167,7 +167,7 @@ public final class LexAnn {
      * @param str - the string to use
      * @throws ParseError 
      */
-    public void setString(String str) throws ParseError {
+    public void setString(String str) {
         checkLine(str);
         line=str.toCharArray();
         pos=0;
@@ -177,7 +177,7 @@ public final class LexAnn {
         value = 0;
     }
 
-    public void setLineLoader(LineLoader lineLoader) throws ParseError {
+    public void setLineLoader(LineLoader lineLoader) {
         this.lineLoader = lineLoader;
     }
     
@@ -210,7 +210,7 @@ public final class LexAnn {
     /**Read the next token
      * @return int - ttype
      * @throws ParseError */
-    public int nextToken() throws ParseError {
+    public int nextToken() {
     	if(pBack) {
     		pBack = false;
             return ttype;
@@ -429,7 +429,7 @@ public final class LexAnn {
     //this is a little crude (i.e. the rdp should really pick it up)
     //but it's not all that good about it, hence somewhat kludgy fix
     // TODO: allow "'", '"'
-    private void checkLine(String line) throws ParseError{
+    private void checkLine(String line) {
         boolean inQuotes=false;
         int brCount=0;
         char chars[] = line.toCharArray();
